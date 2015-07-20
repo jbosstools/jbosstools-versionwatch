@@ -43,7 +43,22 @@ public class Bundle {
 	}
 	
 	/**
-	 * Returns html format of bundle versions
+	 * Returns html format of bundle versions, with full qualifiers (x.y.z.qqq)
+	 * @return
+	 */
+	public String getFullVersions() {
+		String versions = "";
+		for (int i = 0; i < getInstances().size(); i++) {		
+			versions += getInstances().get(i).getFullVersion();
+			if (i < getInstances().size() - 1) {
+				versions +="<br/>";
+			}
+		}
+		return versions;
+	}
+	
+	/**
+	 * Returns html format of bundle versions, without qualifiers (x.y.z only)
 	 * @return
 	 */
 	public String getVersions() {

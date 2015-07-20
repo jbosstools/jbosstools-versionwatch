@@ -25,7 +25,6 @@ public abstract class Report {
 	
 	
 	protected StringBuilder sb;
-	String fileName = "default.html";
 
 	protected List<Installation> installations;
 	
@@ -48,6 +47,7 @@ public abstract class Report {
 			BufferedWriter bw = new BufferedWriter(pw);
 			bw.append(sb.toString());
 			bw.flush();
+			bw.close();
 		} catch(Exception e) {
 			LogService.logAndExit("Unable to generate report file");
 		}
@@ -55,16 +55,7 @@ public abstract class Report {
 		
 	}
 
-	protected void generateHeader() {		
-		String style = ReportService.getInstance().getCSSContent();
-		add(html.html());
-		add(html.head());	
-		sb.append("<style type=\"text/css\">" + style + "</style>");
-		sb.append("</head>");
-		add(html.title());
-		add(html.title().end());
-		add(html.body());
-	}
+	protected abstract void generateHeader();
 	
 	protected abstract void generateBody();
 	

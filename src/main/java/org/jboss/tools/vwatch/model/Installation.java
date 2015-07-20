@@ -110,7 +110,7 @@ public class Installation {
 
 	}
 
-	public Set<Bundle> getBundles(boolean feature) {
+	public Set<Bundle> getIUs(boolean feature) {
 		if (feature)
 			return getFeatures();
 		else

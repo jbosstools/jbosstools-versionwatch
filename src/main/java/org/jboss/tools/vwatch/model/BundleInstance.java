@@ -12,6 +12,7 @@ public class BundleInstance {
 	String fullName;
 	Bundle bundle;
 	Version version;
+	String fullversion;
 	String postfix;
 	String md5 = "";
 	BundleType bundleType = new BundleType(BundleType.NONE);
@@ -43,12 +44,17 @@ public class BundleInstance {
 		this.bundle = bundle;
 	}
 
+	public String getFullVersion() {
+		return fullversion;
+	}
+
 	public Version getVersion() {
 		return version;
 	}
 
 	public void setVersion(Version version) {
 		this.version = version;
+		this.fullversion = version.toQualifiedString();
 	}
 
 	public String getPostfix() {

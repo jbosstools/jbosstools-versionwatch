@@ -102,7 +102,7 @@ public class EvaluationService {
 
 	private void findBundleIssues(Installation installation, boolean feature) {
 		// find new issues
-		for (Bundle b : installation.getBundles(feature)) {
+		for (Bundle b : installation.getIUs(feature)) {
 			runBundleValidators(b);
 		}
 	}
@@ -128,8 +128,8 @@ public class EvaluationService {
 			boolean feature) {
 
 		BundleService bs = new BundleService();
-		for (Bundle b2 : i2.getBundles(feature)) {
-			Bundle b1 = bs.getBundleFromList(i1.getBundles(feature),
+		for (Bundle b2 : i2.getIUs(feature)) {
+			Bundle b1 = bs.getBundleFromList(i1.getIUs(feature),
 					b2.getName());
 			if (b1 != null) {
 
@@ -171,7 +171,7 @@ public class EvaluationService {
 		BundleService bs = new BundleService();
 		log.setLevel(Settings.getLogLevel());
 
-		for (Bundle b2 : i2.getBundles(feature)) {
+		for (Bundle b2 : i2.getIUs(feature)) {
 			// only validate if the include/exclude filters match, which saves a ton of time
 			if (
 					(PairValidator.isNullFilter(Settings.getIncludeIUs())
@@ -180,7 +180,7 @@ public class EvaluationService {
 					(PairValidator.isNullFilter(Settings.getExcludeIUs())
 							|| !b2.getName().matches(Settings.getExcludeIUs()))					
 					) {
-				Bundle b1 = bs.getBundleFromList(i1.getBundles(feature),
+				Bundle b1 = bs.getBundleFromList(i1.getIUs(feature),
 						b2.getName());
 				if (b1 != null) {
 					if (!b1.hasMultipleInstances()

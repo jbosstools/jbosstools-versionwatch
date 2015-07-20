@@ -68,7 +68,7 @@ public class InstallationService {
 					(PairValidator.isNullFilter(excludeIUs) || !record.matches(excludeIUs))
 				) {
 				Bundle bundle = parseAndGetBundle(installation, feature, record);
-				if (bundle != null) installation.getBundles(feature).add(bundle);
+				if (bundle != null) installation.getIUs(feature).add(bundle);
 			}
 		}		
 	}
@@ -82,7 +82,7 @@ public class InstallationService {
 		//Bundle b = new Bundle();
 		
 		// parse version from record
-		Pattern pattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
+		Pattern pattern = Pattern.compile("\\d+\\.\\d+\\.\\d+\\.*.*");
 		Matcher m = pattern.matcher(record);
 		m.find();
 		String versionString = m.group();
@@ -93,7 +93,8 @@ public class InstallationService {
 		v.setMajor(Integer.parseInt(split[0]));
 		v.setMinor(Integer.parseInt(split[1]));
 		v.setBuild(Integer.parseInt(split[2]));
-			
+		v.setQualifier(split[3].toString());
+
 		// create bundle instance
 		BundleInstance bi = new BundleInstance();
 		bi.setVersion(v);
@@ -144,7 +145,7 @@ public class InstallationService {
 		BundleService bs = new BundleService();
 		// always returns the FIRST instance matching the 'found' regex
 		// use getBundlesFromList to return ALL matching instances
-		Bundle b = bs.getBundleFromList(installation.getBundles(feature), found); 
+		Bundle b = bs.getBundleFromList(installation.getIUs(feature), found);
 		if (b == null ) {
 			b = new Bundle();
 			b.setInstallation(installation);
