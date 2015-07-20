@@ -21,6 +21,7 @@ public class ProductReport extends Report {
 
 	Logger log = Logger.getLogger(ProductReport.class);
 	Installation installation;
+	int overallIssueCount;
 
 	public ProductReport(Installation installation) {
 		this.installation = installation;
@@ -43,6 +44,8 @@ public class ProductReport extends Report {
 		reportVersionDecreasedIssue();
 		reportFolderAndJarIssue();
 		reportMD5Issues();
+		add("&nbsp;<p>" + (overallIssueCount < 1 ? "<b style='color:green'>No" : "<b style='color:red'>" + overallIssueCount)
+			+ " issues found.</b></p>\n");
 	}
 
 	protected void generateFooter() {
@@ -55,6 +58,7 @@ public class ProductReport extends Report {
 		int count = r1.getCount() + r2.getCount();
 		String text = r1.getHtml() + r2.getHtml();
 		IssueCounter.getInstance().setValue(class1,count);
+		overallIssueCount += count;
 		return count != 0 ? text : null; // "No issues found" + html.newLine() : text;
 	}
 
