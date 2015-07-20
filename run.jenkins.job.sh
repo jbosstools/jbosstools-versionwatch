@@ -76,8 +76,8 @@ if [[ ! ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]]; then
   # the baseline JBDS_INSTALLERS. This will always overwrite if the version has changed since last time.
   if [[ -f $(find /qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/latest/all/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 9
     JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/latest/all/
-  elif [[ -f $(find /qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/installer/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 8 and earlier
-  JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/installer/
+  elif [[ -f $(find /qa/services/http/binaries/RHDS/staging/${UPSTREAM_JOB}/installer/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 8 and earlier
+    JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/builds/staging/${UPSTREAM_JOB}/installer/
   fi
 fi
 if [[ ! ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]]; then
