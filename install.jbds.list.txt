@@ -1,4 +1,4 @@
-/qa/services/http/binaries/RHDS/builds/development/8.1.0.GA-build-core/jboss-devstudio-8.1.0.GA-installer-standalone.jar
+/qa/services/http/binaries/RHDS/builds/stable/8.1.0.GA-build-core/jboss-devstudio-8.1.0.GA-installer-standalone.jar,
 /qa/services/http/binaries/RHDS/builds/stable/7.1.1.GA.installer/jbdevstudio-product-universal-7.1.1.GA-v20140314-2145-B688.jar,
 /qa/services/http/binaries/RHDS/builds/stable/6.0.1.GA.installer/jbdevstudio-product-universal-6.0.1.GA-v20130327-2052-B361.jar,
 /qa/services/http/binaries/RHDS/builds/stable/5.0.2.GA.installer/jbdevstudio-product-universal-5.0.2.v20130119-0035-H249-GA.jar,

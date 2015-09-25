@@ -27,10 +27,6 @@ INSTALL_FOLDER=/home/hudson/static_build_env/jbds/versionwatch/installations
 # To generate a report containing fewer bundles/features, set a regex that will match only those you want in the report, eg., .*(hibernate|jboss|xulrunner).* or match everything with .*
 INCLUDE_IUS=".*(hibernate|jboss|xulrunner).*"
 
-FROM=${WORKSPACE}/sources
-SNAPSHOTS=tools@filemgmt.jboss.org:/downloads_htdocs/tools/mars/snapshots/builds/
-DEST=${SNAPSHOTS}/${JOB_NAME}
-URL=http://download.jboss.org/jbosstools/mars/snapshots/builds/${JOB_NAME}
 DESCRIPTION=""
 
 # file from which to pull a list of JBDS installers to install
@@ -41,6 +37,7 @@ INCLUDE_VERSIONS="\d+\.\d+\.\d+"
 EXCLUDE_VERSIONS=""
 INCLUDE_IUS=".*"
 EXCLUDE_IUS=""
+STREAM_NAME="9.0" # neon, mars, 10.0, 9.0, etc.
 others=""
 
 # read commandline args
@@ -57,10 +54,16 @@ while [[ "$#" -gt 0 ]]; do
     '-EXCLUDE_VERSIONS') EXCLUDE_VERSIONS="$2"; shift 1;;
     '-INCLUDE_IUS') INCLUDE_IUS="$2"; shift 1;;
     '-EXCLUDE_IUS') EXCLUDE_IUS="$2"; shift 1;;
+    '-STREAM_NAME') STREAM_NAME="$2"; shift 1;;
     *) others="$others $1"; shift 0;;
   esac
   shift 1
 done
+
+FROM=${WORKSPACE}/sources
+SNAPSHOTS=tools@filemgmt.jboss.org:/downloads_htdocs/tools/${STREAM_NAME}/snapshots/builds/
+DEST=${SNAPSHOTS}/${JOB_NAME}
+URL=http://download.jboss.org/jbosstools/${STREAM_NAME}/snapshots/builds/${JOB_NAME}
 
 # if not set commandline, use default upstream job based on this job's name -> devstudio.product_master, devstudio.product_8.0.luna, etc.
 if [[ ! ${UPSTREAM_JOB} ]]; then
@@ -74,8 +77,8 @@ fi
 if [[ ! ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]]; then
   # Folder from which to install the latest nightly JBDS build, and run the version watch comparing this latest against
   # the baseline JBDS_INSTALLERS. This will always overwrite if the version has changed since last time.
-  if [[ -f $(find /qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/latest/all/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 9
-    JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/9.0/snapshots/builds/${UPSTREAM_JOB}/latest/all/
+  if [[ -f $(find /qa/services/http/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 9
+    JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/
   elif [[ -f $(find /qa/services/http/binaries/RHDS/builds/staging/${UPSTREAM_JOB}/installer/ -maxdepth 1 -type f -name "*installer*.jar" | head -1) ]]; then # JBDS 8 and earlier
     JBDS_INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/builds/staging/${UPSTREAM_JOB}/installer/
   fi
