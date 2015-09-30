@@ -1,10 +1,11 @@
-Version Watch
-* tool for monitoring eclipse product bundles designed for JBoss Developer Studio
-* JBIDE-19058 replace filter with includeIUs and excludeIUs so we can more intelligently filter out IUs to ignore
-* JBIDE-19059 refactor output.html and report.html to report_detailed.html and report_summary.html
+Version Watch: a tool for auditing changes to versions of eclipse features & bundles between releases of JBoss Developer Studio
+
+CHANGELOG
 
 Version 0.4.1
 * Version bumped indicator added
+* JBIDE-19058 replace filter with includeIUs and excludeIUs so we can more intelligently filter out IUs to ignore
+* JBIDE-19059 refactor output.html and report.html to report_detailed.html and report_summary.html
 
 Version 0.4
 * Deep MD5 check for jar archives added
