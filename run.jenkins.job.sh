@@ -115,11 +115,9 @@ publish ()
   # rename in workspace
   mv ${FROM}/report_detailed.html ${FROM}/report_detailed_${name}.html
   mv ${FROM}/report_summary.html ${FROM}/report_summary_${name}.html
-  # publish
-  echo "mkdir ${JOB_NAME}" | sftp ${SNAPSHOTS}
-  rsync -Pzrlt --rsh=ssh --protocol=28 ${FROM}/report_detailed_${name}.html ${DEST}/${BUILD_ID}_B${BUILD_NUMBER}_report_detailed_${name}.html
-  rsync -Pzrlt --rsh=ssh --protocol=28 ${FROM}/report_summary_${name}.html ${DEST}/${BUILD_ID}_B${BUILD_NUMBER}_report_summary_${name}.html
-  rsync -Pzrlt --rsh=ssh --protocol=28 ${FROM}/target/*.css ${FROM}/target/*.png ${DEST}/target/
+  # publish now depends on having publish/rsync.sh fetched to workspace already -- see https://repository.jboss.org/nexus/content/groups/public/org/jboss/tools/releng/jbosstools-releng-publish/
+  . ${WORKSPACE}/sources/publish/rsync.sh -s ${FROM} -t ${DEST}/${BUILD_ID}-B${BUILD_NUMBER}/all/
+
   # create links to html files (must be all on one line)
   DESCRIPTION="${DESCRIPTION}"'<li>'${label}' <a href="'${URL}'/'${BUILD_ID}'_B'${BUILD_NUMBER}'_report_detailed_'${name}'.html">Details</a>,\
    <a href="'${URL}'/'${BUILD_ID}'_B'${BUILD_NUMBER}'_report_summary_'${name}'.html">Summary</a></li>'
