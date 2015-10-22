@@ -29,6 +29,8 @@ INCLUDE_IUS=".*(hibernate|jboss|xulrunner).*"
 
 DESCRIPTION=""
 
+DESTINATION=tools@filemgmt.jboss.org:/downloads_htdocs/tools # or devstudio@filemgmt.jboss.org:/www_htdocs/devstudio or /qa/services/http/binaries/RHDS
+
 # file from which to pull a list of JBDS installers to install
 JBDS_INSTALLERS_LISTFILE=${SRC_PATH}/install.jbds.list.txt
 
@@ -37,7 +39,7 @@ INCLUDE_VERSIONS="\d+\.\d+\.\d+"
 EXCLUDE_VERSIONS=""
 INCLUDE_IUS=".*"
 EXCLUDE_IUS=""
-STREAM_NAME="9.0" # neon, mars, 10.0, 9.0, etc.
+STREAM_NAME="9.0" # for JBDS, use 10.0, 9.0; for JBT, use neon, mars
 others=""
 
 # read commandline args
@@ -55,6 +57,7 @@ while [[ "$#" -gt 0 ]]; do
     '-INCLUDE_IUS') INCLUDE_IUS="$2"; shift 1;;
     '-EXCLUDE_IUS') EXCLUDE_IUS="$2"; shift 1;;
     '-STREAM_NAME') STREAM_NAME="$2"; shift 1;;
+    '-DESTINATION') DESTINATION="$2"; shift 1;; # override for JBDS publishing, eg., devstudio@filemgmt.jboss.org:/www_htdocs/devstudio
     *) others="$others $1"; shift 0;;
   esac
   shift 1
@@ -118,7 +121,7 @@ publish ()
   rsync -aq ${SRC_PATH}/target/*.png ${SRC_PATH}/../results/target/
 
   # publish now depends on having publish/rsync.sh fetched to workspace already -- see https://repository.jboss.org/nexus/content/groups/public/org/jboss/tools/releng/jbosstools-releng-publish/
-  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/../results -t ${TRG_PATH}/
+  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/../results -t ${TRG_PATH}/ -DESTINATION ${DESTINATION}
 
   # create links to html files (must be all on one line)
   DESCRIPTION="${DESCRIPTION}"'<li>'${label}' <a href="'${URL}'/report_detailed_'${name}'.html">Details</a>,\
