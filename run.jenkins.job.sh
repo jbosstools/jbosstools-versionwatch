@@ -65,7 +65,16 @@ done
 
 SRC_PATH=${WORKSPACE}/sources
 TRG_PATH=${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_ID}-B${BUILD_NUMBER}
-URL=http://download.jboss.org/jbosstools/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_ID}-B${BUILD_NUMBER}
+
+if [[ ${DESTINATION//tools@filemgmt.jboss.org} != ${DESTINATION} ]]; then # JBT public
+  URL=http://download.jboss.org/jbosstools/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_ID}-B${BUILD_NUMBER}
+elif [[ ${DESTINATION//devstudio@filemgmt.jboss.org} != ${DESTINATION} ]]; then # JBDS public
+  URL=https://devstudio.redhat.com/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_ID}-B${BUILD_NUMBER}
+elif [[ ${DESTINATION//binaries\/RHDS} != ${DESTINATION} ]]; then # JBDS internal
+  URL=http://www.qa.jboss.com/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_ID}-B${BUILD_NUMBER}
+else # local file in workspace
+  URL="ws/results";
+fi
 
 # if not set commandline, use default upstream job based on this job's name -> devstudio.product_master, devstudio.product_8.0.luna, etc.
 if [[ ! ${UPSTREAM_JOB} ]]; then
