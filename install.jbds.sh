@@ -143,7 +143,7 @@ installJBDS() {
 if [[ ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]]; then 
   # install the latest nightly, caching the last version used in jbds-8.0.2.GA/version.txt so we only ever have one nightly at a time
   # new query method for JBDS 8/9, eg., for jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar
-  for i in `find ${JBDS_INSTALLER_NIGHTLY_FOLDER} -name "jboss-devstudio-*-installer-standalone.jar"`; do
+  for i in `find ${JBDS_INSTALLER_NIGHTLY_FOLDER} -name "jboss-devstudio-*-installer-standalone.jar" -a -not -name "*latest*"`; do
     ver=${i##*-devstudio-}; ver=${ver%%-installer-standalone.jar}; # 8.0.0.GA-v20141020-1042-B317
     f=${i##*-devstudio-}; f=${f%%-*}; # 8.0.0.GA
     LATEST=${INSTALL_FOLDER}/jbds-${f}/version.txt
@@ -160,7 +160,7 @@ if [[ ${JBDS_INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${JBDS_INSTALLER_NIGHTLY_FOLD
 
   # install the latest nightly, caching the last version used in jbds-7.0.0.CR1/version.txt so we only ever have one nightly at a time
   # old query method for JBDS 5/6/7, eg., jbdevstudio-product-universal-7.1.0.GA-v20131208-0703-B592.jar
-  for i in `find ${JBDS_INSTALLER_NIGHTLY_FOLDER} -name "jbdevstudio-product-universal-*.jar"`; do
+  for i in `find ${JBDS_INSTALLER_NIGHTLY_FOLDER} -name "jbdevstudio-product-universal-*.jar" -a -not -name "*latest*"`; do
     ver=${i##*-universal-}; ver=${ver%%.jar}; # 7.0.0.Beta2-v20130626-0242-B345
     f=${i##*-universal-}; f=${f%%-*}; # 7.0.0.Beta2
     LATEST=${INSTALL_FOLDER}/jbds-${f}/version.txt
