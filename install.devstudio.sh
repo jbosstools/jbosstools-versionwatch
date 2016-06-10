@@ -38,11 +38,11 @@ usage() {
   echo "  [ -INSTALL_FOLDER /home/hudson/static_build_env/devstudio/versionwatch/installations ]"
   echo "  [ -INSTALLER_NIGHTLY_FOLDER /10.0/snapshots/builds/devstudio.product_master/latest/all/ ]"
   echo "  [ -INSTALLERS_LISTFILE /path/to/install.devstudio.list.txt ]"
-  echo "  [ -INSTALLERS \"/path/to/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /path/to/jboss-devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\" ]"
+  echo "  [ -INSTALLERS \"/path/to/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /path/to/devstudio-10.0.0.GA-v20160105-0547-B4563-installer-standalone.jar\" ]"
   echo ""
   echo "Example:"
   echo "  ./install.devstudio.sh -JAVA /opt/jdk1.8.0/bin/java -INSTALL_FOLDER /tmp/versionwatch-installations -INSTALLERS_LISTFILE /dev/null \\"
-  echo "    -INSTALLERS \"/tmp/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /tmp/jboss-devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\""
+  echo "    -INSTALLERS \"/tmp/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /tmp/devstudio-10.0.0.GA-v20160105-0547-B4563-installer-standalone.jar\""
 
 }
 
@@ -141,9 +141,25 @@ installDevstudio() {
 }
 
 if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; then 
+  # new query method for devstudio 10, eg., for devstudio-10.0.0.GA-v20141020-1042-B317-installer-standalone.jar
+  for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "devstudio-*-installer-standalone.jar" -a -not -name "*latest*"` ; do
+    ver=${i##devstudio-}; ver=${ver%%-installer-standalone.jar}; # 10.0.0.GA-v20160620-1042-B317
+    f=${i##devstudio-}; f=${f%%-*}; # 10.0.0.GA
+    LATEST=${INSTALL_FOLDER}/devstudio-${f}/version.txt
+    if [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]] && [[ -f ${LATEST} ]] && [[ `cat ${LATEST}` == $ver ]]; then 
+      echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${f} (${ver})"
+    else
+      # wipe existing installation
+      if [[ ${f} ]] && [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]]; then rm -fr ${INSTALL_FOLDER}/devstudio-${f}; fi
+      # echo "Install devstudio ${f} (${ver}) to ${INSTALL_FOLDER}/devstudio-${f} ..."
+      installDevstudio ${f} ${i}
+      echo "${ver}" > ${LATEST}
+    fi
+  done
+
   # install the latest nightly, caching the last version used in devstudio-8.0.2.GA/version.txt so we only ever have one nightly at a time
-  # new query method for devstudio 8/9, eg., for jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar
-  for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "jboss-devstudio-*-installer-standalone.jar" -a -not -name "*latest*"`; do
+  # old query method for devstudio 8/9, eg., for jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar
+  for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "jboss-devstudio-*-installer-standalone.jar" -a -not -name "*latest*"` ; do
     ver=${i##*-devstudio-}; ver=${ver%%-installer-standalone.jar}; # 8.0.0.GA-v20141020-1042-B317
     f=${i##*-devstudio-}; f=${f%%-*}; # 8.0.0.GA
     LATEST=${INSTALL_FOLDER}/devstudio-${f}/version.txt
