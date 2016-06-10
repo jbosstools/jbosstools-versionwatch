@@ -143,8 +143,8 @@ installDevstudio() {
 if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; then 
   # new query method for devstudio 10, eg., for devstudio-10.0.0.GA-v20141020-1042-B317-installer-standalone.jar
   for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "devstudio-*-installer-standalone.jar" -a -not -name "*latest*"` ; do
-    ver=${i##devstudio-}; ver=${ver%%-installer-standalone.jar}; # 10.0.0.GA-v20160620-1042-B317
-    f=${i##devstudio-}; f=${f%%-*}; # 10.0.0.GA
+    ver=${i##*/devstudio-}; ver=${ver%%-installer-standalone.jar}; # 10.0.0.GA-v20160620-1042-B317
+    f=${i##*/devstudio-}; f=${f%%-*}; # 10.0.0.GA
     LATEST=${INSTALL_FOLDER}/devstudio-${f}/version.txt
     if [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]] && [[ -f ${LATEST} ]] && [[ `cat ${LATEST}` == $ver ]]; then 
       echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${f} (${ver})"
