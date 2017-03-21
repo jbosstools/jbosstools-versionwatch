@@ -177,7 +177,7 @@ pushd ${SRC_PATH}
 
   # do devstudio installs so we can compare them
   . ${SRC_PATH}/install.devstudio.sh -INSTALLERS_LISTFILE ${INSTALLERS_LISTFILE} -INSTALLER_NIGHTLY_FOLDER ${INSTALLER_NIGHTLY_FOLDER} \
-    -JAVA ${JAVA_HOME}/bin/java ${others}
+    -INSTALL_FOLDER ${INSTALL_FOLDER} -JAVA ${JAVA_HOME}/bin/java ${others}
 popd
 
 # generate reports and publish them
