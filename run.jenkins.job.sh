@@ -5,11 +5,16 @@
 #################################################################
 
 # configuration / defaults
+if [[ ! ${WORKSPACE} ]]; then WORKSPACE=/tmp; fi
+
+# where is java?
+if [[ ! ${NATIVE_TOOLS} ]] && [[ -d /qa/tools/opt ]]; then NATIVE_TOOLS=/qa/tools/opt; fi
+if [[ ! ${JAVA_HOME} ]] && [[ ${NATIVE_TOOLS} ]]; then JAVA_HOME=${NATIVE_TOOLS}/jdk1.8.0_last; fi
 
 # where is maven?
-if [[ ! ${NATIVE_TOOLS} ]]; then NATIVE_TOOLS=/qa/tools/opt; fi
-JAVA_HOME=${NATIVE_TOOLS}/jdk1.8.0_last
-M2_HOME=/qa/tools/opt/apache-maven-3.2.5 # don't use NATIVE_TOOLS because it might be /qa/tools/opt/amd64 and there's no /qa/tools/opt/amd64/apache-maven-3.1.1
+M2_HOME=/qa/tools/opt/apache-maven-3.3.9 # don't use NATIVE_TOOLS because it might be /qa/tools/opt/amd64 and there's no /qa/tools/opt/amd64/apache-maven-3.3.9
+if [[ ! -f ${M2_HOME}/bin/mvn ]]; then echo "[ERROR] Can't find mvn in ${M2_HOME}"; exit 1; fi
+
 PATH=$PATH:$M2_HOME/bin:$JAVA_HOME/bin
 MVN=${M2_HOME}/bin/mvn
 
@@ -18,18 +23,37 @@ UPSTREAM_JOB=""
 
 # CSV list of additional installer jars to use. Will also use list of installers in install.devstudio.list.txt.
 # If the target folder already exists, installation will be skipped.<br/>
-#  eg., /qa/services/http/binaries/RHDS/builds/stable/8.0.0.GA-build-core/jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar
+#  eg., ${HOME}/RHDS-ssh/builds/stable/8.0.0.GA-build-core/jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar
 INSTALLERS=
 
+# attempt to ssh mount the RHDS  mount
+RHDS="hudson@dev90.hosts.mwqe.eng.bos.redhat.com:/qa/services/http/binaries/devstudio" # use dev90 as of 2017-03-15
+for mnt in RHDS; do 
+	if [[ ! -d ${HOME}/${mnt}-ssh ]]; then
+		if [[ $(file ${HOME}/${mnt}-ssh 2>&1) == *"No such file or directory"* ]]; then mkdir -p ${HOME}/${mnt}-ssh; 
+		elif [[ $(file ${HOME}/${mnt}-ssh 2>&1) == *"Transport endpoint is not connected"* ]]; then fusermount -uz ${HOME}/${mnt}-ssh; fi
+		if [[ ! -d ${HOME}/${mnt}-ssh/images ]]; then  sshfs ${!mnt} ${HOME}/${mnt}-ssh; fi
+	fi
+done
+
 # Location where devstudio installations will be put
-INSTALL_FOLDER=/home/hudson/static_build_env/devstudio/versionwatch/installations
+# On some CI slaves, HUDSON_STATIC_ENV = /home/hudson/static_build_env but we can't guarantee that
+# so use sshfs mount instead and fall back if required
+if [[ -d ${HOME}/RHDS-ssh ]]; then 
+	# see http://www.qa.jboss.com/binaries/devstudio/static_build_env/versionwatch/installations/
+	INSTALL_FOLDER=${HOME}/RHDS-ssh/static_build_env/versionwatch/installations
+elif [[ ${HUDSON_STATIC_ENV} ]]; then 
+	INSTALL_FOLDER=${HUDSON_STATIC_ENV}/devstudio/versionwatch/installations
+else
+	INSTALL_FOLDER=${WORKSPACE}/devstudio/versionwatch/installations
+fi
 
 # To generate a report containing fewer bundles/features, set a regex that will match only those you want in the report, eg., .*(hibernate|jboss|xulrunner).* or match everything with .*
 INCLUDE_IUS=".*(hibernate|jboss|xulrunner).*"
 
 DESCRIPTION=""
 
-DESTINATION=tools@filemgmt.jboss.org:/downloads_htdocs/tools # or devstudio@filemgmt.jboss.org:/www_htdocs/devstudio or /qa/services/http/binaries/RHDS
+DESTINATION=devstudio@10.5.105.197:/www_htdocs/devstudio # or tools@filemgmt.jboss.org:/downloads_htdocs/tools # or /qa/services/http/binaries/RHDS
 
 # file from which to pull a list of devstudio installers to install
 INSTALLERS_LISTFILE=${SRC_PATH}/install.devstudio.list.txt
@@ -39,7 +63,7 @@ INCLUDE_VERSIONS="\d+\.\d+\.\d+"
 EXCLUDE_VERSIONS=""
 INCLUDE_IUS=".*"
 EXCLUDE_IUS=""
-STREAM_NAME="10.0" # for devstudio, use 10.0, 9.0; for JBT, use neon, mars
+STREAM_NAME="10.0" # for devstudio, use 10.0, 9.0; for JBT, use oxygen, neon, mars
 others=""
 
 # read commandline args
@@ -67,12 +91,12 @@ BUILD_TIMESTAMP=`date -u +%Y-%m-%d_%H-%M-%S`
 SRC_PATH=${WORKSPACE}/sources
 TRG_PATH=${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
 
-if [[ ${DESTINATION//tools@filemgmt.jboss.org} != ${DESTINATION} ]]; then # JBT public
+if [[ ${DESTINATION} == "tools@"* ]]; then # JBT public
   URL=http://download.jboss.org/jbosstools/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
-elif [[ ${DESTINATION//devstudio@filemgmt.jboss.org} != ${DESTINATION} ]]; then # devstudio public
+elif [[ ${DESTINATION} == "devstudio@"* ]]; then # devstudio public
   URL=https://devstudio.redhat.com/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
-elif [[ ${DESTINATION//binaries\/RHDS} != ${DESTINATION} ]]; then # devstudio internal
-  URL=http://www.qa.jboss.com/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
+elif [[ ${DESTINATION} == *"binaries/devstudio" ]] || [[ ${DESTINATION} == *"binaries/RHDS" ]]; then # devstudio internal
+  URL=http://www.qa.jboss.com/binaries/devstudio/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
 else # local file in workspace
   URL="ws/results";
 fi
@@ -89,11 +113,11 @@ fi
 if [[ ! ${INSTALLER_NIGHTLY_FOLDER} ]]; then
   # Folder from which to install the latest nightly devstudio build, and run the version watch comparing this latest against
   # the baseline INSTALLERS. This will always overwrite if the version has changed since last time.
-  if [[ -f $(find /qa/services/http/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/ -maxdepth 1 -type f -name "*installer*.jar" -a -not -name "*latest*"  | head -1) ]]; then # devstudio 9+
-    INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/
+  if [[ -f $(find ${HOME}/RHDS-ssh/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/ -maxdepth 1 -type f -name "*installer*.jar" -a -not -name "*latest*"  | head -1) ]]; then # devstudio 9+
+    INSTALLER_NIGHTLY_FOLDER=${HOME}/RHDS-ssh/${STREAM_NAME}/snapshots/builds/${UPSTREAM_JOB}/latest/all/
     echo "[INFO] [1] use INSTALLER_NIGHTLY_FOLDER = ${INSTALLER_NIGHTLY_FOLDER}"
-  elif [[ -f $(find /qa/services/http/binaries/RHDS/builds/staging/${UPSTREAM_JOB}/installer/ -maxdepth 1 -type f -name "*installer*.jar" -a -not -name "*latest*" | head -1) ]]; then # devstudio 8 and earlier
-    INSTALLER_NIGHTLY_FOLDER=/qa/services/http/binaries/RHDS/builds/staging/${UPSTREAM_JOB}/installer/
+  elif [[ -f $(find ${HOME}/RHDS-ssh/builds/staging/${UPSTREAM_JOB}/installer/ -maxdepth 1 -type f -name "*installer*.jar" -a -not -name "*latest*" | head -1) ]]; then # devstudio 8 and earlier
+    INSTALLER_NIGHTLY_FOLDER=${HOME}/RHDS-ssh/builds/staging/${UPSTREAM_JOB}/installer/
     echo "[INFO] [2] use INSTALLER_NIGHTLY_FOLDER = ${INSTALLER_NIGHTLY_FOLDER}"
   fi
 fi
