@@ -157,23 +157,6 @@ if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; th
       echo "${ver}" > ${LATEST}
     fi
   done
-
-  # install the latest nightly, caching the last version used in devstudio-7.0.0.CR1/version.txt so we only ever have one nightly at a time
-  # old query method for devstudio 5/6/7, eg., jbdevstudio-product-universal-7.1.0.GA-v20131208-0703-B592.jar
-  for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "jbdevstudio-product-universal-*.jar" -a -not -name "*latest*"`; do
-    ver=${i##*-universal-}; ver=${ver%%.jar}; # 7.0.0.Beta2-v20130626-0242-B345
-    f=${i##*-universal-}; f=${f%%-*}; # 7.0.0.Beta2
-    LATEST=${INSTALL_FOLDER}/devstudio-${f}/version.txt
-    if [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]] && [[ -f ${LATEST} ]] && [[ `cat ${LATEST}` == $ver ]]; then 
-      echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${f} (${ver})"
-    else
-      # wipe existing installation
-      if [[ ${f} ]] && [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]]; then rm -fr ${INSTALL_FOLDER}/devstudio-${f}; fi
-      # echo "Install devstudio ${f} (${ver}) to ${INSTALL_FOLDER}/devstudio-${f} ..."
-      installDevstudio ${f} ${i}
-      echo "${ver}" > ${LATEST}
-    fi
-  done
 else
   echo "[ERROR] No nightly devstudio install found in INSTALLER_NIGHTLY_FOLDER = ${INSTALLER_NIGHTLY_FOLDER}"
 fi
