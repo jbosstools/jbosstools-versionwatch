@@ -9,7 +9,7 @@
 # mvn -f pom.xml clean test -DinstallationsDir="${INSTALL_FOLDER}" -DincludeIUs=".*jboss.*" -Dvwatch.md5check
 
 # Here's an example to unpack a couple devstudio installers already on disk:
-# ./install.devstudio.sh -JAVA /opt/sun-java2-8.0/bin/java -INSTALL_FOLDER /w/home-nboldt/tmp/devstudio-installs/ -INSTALLERS "/w/home-nboldt/tmp/devstudio_Installers/8.x/jboss-devstudio-8.0.2.GA-v20150114-2029-B382-installer-eap.jar, /w/home-nboldt/tmp/devstudio_Installers/8.x/jboss-devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar"
+# ./install.devstudio.sh -JAVA /opt/sun-java2-8.0/bin/java -INSTALL_FOLDER /w/home-nboldt/tmp/devstudio-installs/ -INSTALLERS "/w/home-nboldt/tmp/devstudio_Installers/8.x/devstudio-8.0.2.GA-v20150114-2029-B382-installer-eap.jar, /w/home-nboldt/tmp/devstudio_Installers/8.x/devstudio-8.0.0.GA-v20141020-1042-B317-installer-standalone.jar"
 
 # Jenkins variables:
 
@@ -38,11 +38,11 @@ usage() {
   echo "  [ -INSTALL_FOLDER /home/hudson/static_build_env/devstudio/versionwatch/installations ]"
   echo "  [ -INSTALLER_NIGHTLY_FOLDER /10.0/snapshots/builds/devstudio.product_master/latest/all/ ]"
   echo "  [ -INSTALLERS_LISTFILE /path/to/install.devstudio.list.txt ]"
-  echo "  [ -INSTALLERS \"/path/to/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /path/to/jboss-devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\" ]"
+  echo "  [ -INSTALLERS \"/path/to/devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /path/to/devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\" ]"
   echo ""
   echo "Example:"
   echo "  ./install.devstudio.sh -JAVA /opt/jdk1.8.0/bin/java -INSTALL_FOLDER /tmp/versionwatch-installations -INSTALLERS_LISTFILE /dev/null \\"
-  echo "    -INSTALLERS \"/tmp/jboss-devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /tmp/jboss-devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\""
+  echo "    -INSTALLERS \"/tmp/devstudio-9.1.0.Beta1-v20151216-2040-B197-installer-standalone.jar, /tmp/devstudio-10.0.0.Alpha1-v20160105-0547-B4563-installer-standalone.jar\""
 
 }
 
@@ -166,7 +166,7 @@ for i in ${INSTALLER_LIST}; do
   # if target folder does not exist, run the installer
   # 8.0.0.GA-v20141020-1042-B317
   # support old file formats (4, 5/6/7, and 8/9
-  ver=${i##*jbdevstudio-product-linux-gtk-}; ver=${ver##*-universal-}; ver=${ver##*-devstudio-}; ver=${ver%%.jar*}; ver=${ver%%-installer-standalone};  
+  ver=${i##*devstudio-}; ver=${ver%%-installer-standalone.jar*}; ver=${ver##*devstudio-} # 10.2.0.AM3-v20161109-2358-B6414
   if [[ -d ${INSTALL_FOLDER}/devstudio-${ver} ]]; then 
     echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${ver}"
   else
