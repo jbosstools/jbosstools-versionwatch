@@ -55,9 +55,6 @@ DESCRIPTION=""
 
 DESTINATION=devstudio@10.5.105.197:/www_htdocs/devstudio # or tools@filemgmt.jboss.org:/downloads_htdocs/tools # or /qa/services/http/binaries/RHDS
 
-# file from which to pull a list of devstudio installers to install
-INSTALLERS_LISTFILE=${SRC_PATH}/install.devstudio.list.txt
-
 # include and exclude patterns for which devstudio installs to use when producing the version diff report
 INCLUDE_VERSIONS="\d+\.\d+\.\d+"
 EXCLUDE_VERSIONS=""
@@ -65,6 +62,13 @@ INCLUDE_IUS=".*"
 EXCLUDE_IUS=""
 STREAM_NAME="10.0" # for devstudio, use 10.0, 9.0; for JBT, use oxygen, neon, mars
 others=""
+
+BUILD_TIMESTAMP=`date -u +%Y-%m-%d_%H-%M-%S`
+SRC_PATH=${WORKSPACE}/sources
+TRG_PATH=${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
+
+# file from which to pull a list of devstudio installers to install
+INSTALLERS_LISTFILE=${SRC_PATH}/install.devstudio.list.txt
 
 # read commandline args
 while [[ "$#" -gt 0 ]]; do
@@ -86,10 +90,6 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift 1
 done
-
-BUILD_TIMESTAMP=`date -u +%Y-%m-%d_%H-%M-%S`
-SRC_PATH=${WORKSPACE}/sources
-TRG_PATH=${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
 
 if [[ ${DESTINATION} == "tools@"* ]]; then # JBT public
   URL=http://download.jboss.org/jbosstools/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
