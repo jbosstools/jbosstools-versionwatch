@@ -37,7 +37,7 @@ public abstract class Report {
 	}
 	
 	private void createReportFile() {
-		File file = new File(getFileName());
+		File file = new File("target/" + getFileName());
 
 		try {
 			PrintWriter pw = new PrintWriter(file);

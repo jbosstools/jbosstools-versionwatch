@@ -5,6 +5,7 @@ CHANGELOG
 Version 0.4.200
 * Implement proper dupe version range checking
 * Update known dupe issues for Neon.3
+* Move report_*.html files into target/ folder where they belong
 
 Version 0.4.100
 * JBIDE-23483 installer jar no longer has jboss- prefix

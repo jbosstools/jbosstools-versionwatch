@@ -69,7 +69,7 @@ public class BundleVersionReport extends Report {
 		add("<h2>Version Watch - Detailed Report: " + installations.get(installations.size() - 1).getRootFolderName()
 				+ "</h2>");
 
-		File file = new File(getFileName());
+		File file = new File("target/" + getFileName());
 		String includeIUs = Settings.getIncludeIUs();
 		String excludeIUs = Settings.getExcludeIUs();
 
