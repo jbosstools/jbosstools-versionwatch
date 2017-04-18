@@ -105,7 +105,8 @@ TMPDIR=/tmp
 # define install config file
 installDevstudio() {
   version=${1}
-  jar=${2}
+  remoteJar=${2} # http://path/to/installer.jar
+  localJar=${remoteJar##*/} # just the installer.jar file
 
   namespace=com.jboss.devstudio.core.installer
   echo "<?xml version='1.0' encoding='UTF-8' standalone='no'?>
@@ -130,14 +131,13 @@ installDevstudio() {
 <${namespace}.ShortcutPanelPatch id='shortcutpatch'/>
 <com.izforge.izpack.panels.SimpleFinishPanel id='finish'/>
 </AutomatedInstallation>" > ${INSTALL_FOLDER}/devstudio-${version}.install.xml
-  if [[ ! -f ${jar} ]] && [[ ${BASE_URL} ]]; then
+
+  if [[ ! -f ${TMPDIR}/${localJar} ]] && [[ ${BASE_URL} ]]; then
     # download the installer 
-    remoteJar=${BASE_URL}/${jar##/qa/services/http/binaries/RHDS/}
-    jar=${TMPDIR}/${jar##*/}
-    echo "${jar} not found, so download it from ${remoteJar}"
+    echo "${localJar} not found, so download it from ${remoteJar}"
     pushd ${TMPDIR}/ >/dev/null; wget -nc ${remoteJar}; popd >/dev/null
   fi
-  ${JAVA} ${others} -jar ${jar} ${INSTALL_FOLDER}/devstudio-${version}.install.xml
+  ${JAVA} ${others} -jar ${TMPDIR}/${localJar} ${INSTALL_FOLDER}/devstudio-${version}.install.xml
 }
 
 if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; then 
