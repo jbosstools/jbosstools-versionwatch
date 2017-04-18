@@ -11,31 +11,31 @@ import org.jboss.tools.vwatch.service.LogService;
 import org.jboss.vwatch.util.HtmlWriter;
 
 /**
- * Abstract for all Report classes 
+ * Abstract for all Report classes
+ * 
  * @author jpeterka
  *
  */
 public abstract class Report {
-	
+
 	Logger log = Logger.getLogger(Report.class);
-	protected HtmlWriter html = new HtmlWriter(); 
-	
-	
+	protected HtmlWriter html = new HtmlWriter();
+
 	protected StringBuilder sb;
 
 	protected List<Installation> installations;
-	
+
 	public Report() {
 		this.sb = new StringBuilder();
 	}
-	
+
 	public void generateReport() {
 		generateHeader();
 		generateBody();
-		generateFooter();		
+		generateFooter();
 		createReportFile();
 	}
-	
+
 	private void createReportFile() {
 		File file = new File("target/" + getFileName());
 
@@ -45,20 +45,19 @@ public abstract class Report {
 			bw.append(sb.toString());
 			bw.flush();
 			bw.close();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LogService.logAndExit("Unable to generate report file");
 		}
 		log.warn("Report generated to file:///" + file.getAbsolutePath());
-		
+
 	}
 
 	protected abstract void generateHeader();
-	
-	protected abstract void generateBody();
-	
-	protected abstract String getFileName();	
 
-	
+	protected abstract void generateBody();
+
+	protected abstract String getFileName();
+
 	public String getContent() {
 		return sb.toString();
 	}
@@ -66,10 +65,12 @@ public abstract class Report {
 	protected void generateFooter() {
 		add(html.body().end());
 		add(html.html().end());
-	}	
+	}
+
 	protected void add(Tag str) {
 		sb.append(str + "\n");
 	}
+
 	protected void add(String str) {
 		sb.append(str + "\n");
 	}
@@ -78,6 +79,5 @@ public abstract class Report {
 		sb.append(str + "\n");
 		sb.append(html.newLine());
 	}
-
 
 }

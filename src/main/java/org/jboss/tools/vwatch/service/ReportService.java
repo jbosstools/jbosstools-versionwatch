@@ -84,17 +84,17 @@ public class ReportService {
 	}
 
 	public String getBumpIcoPath() {
-		String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")).getAbsolutePath(), bumpIcoPath);
+		String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")+"target/").getAbsolutePath(), bumpIcoPath);
 		return  relPath;
 	}
 
     public String getDecIcoPath() {
-        String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")).getAbsolutePath(), decIcoPath);
+        String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")+"target/").getAbsolutePath(), decIcoPath);
         return  relPath;
     }
 
     public String getSameIcoPath() {
-        String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")).getAbsolutePath(), sameIcoPath);
+        String relPath = FileService.getInstance().getRelPath(new File(System.getProperty("user.dir")+"target/").getAbsolutePath(), sameIcoPath);
         return  relPath;
     }
 

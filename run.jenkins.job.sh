@@ -154,13 +154,13 @@ publish ()
   name=${label,,} # lowercase
   # rename in workspace
   mkdir -p ${SRC_PATH}/../results/target/
-  mv ${SRC_PATH}/report_detailed.html ${SRC_PATH}/../results/report_detailed_${name}.html
-  mv ${SRC_PATH}/report_summary.html ${SRC_PATH}/../results/report_summary_${name}.html
-  rsync -aq ${SRC_PATH}/target/*.png ${SRC_PATH}/../results/target/
+  mv ${SRC_PATH}/target/report_detailed.html ${SRC_PATH}/target/report_detailed_${name}.html
+  mv ${SRC_PATH}/target/report_summary.html ${SRC_PATH}/target/report_summary_${name}.html
 
   # publish now depends on having publish/rsync.sh fetched to workspace already -- see 
   # https://repository.jboss.org/nexus/content/groups/public/org/jboss/tools/releng/jbosstools-releng-publish/
-  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/../results -t ${TRG_PATH}/ -DESTINATION ${DESTINATION}
+  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/target/ -t ${TRG_PATH}/ -DESTINATION ${DESTINATION} -i "*report_*.html"
+  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/target/ -t ${TRG_PATH}/ -DESTINATION ${DESTINATION} -i "*.png"
 
   # create links to html files (must be all on one line)
   DESCRIPTION="${DESCRIPTION}"'<li>'${label}' <a href="'${URL}'/report_detailed_'${name}'.html">Details</a>,\
@@ -171,10 +171,6 @@ publish ()
 
 
 pushd ${SRC_PATH}
-  # clean up leftovers from previous builds
-  rm -f output.html product.html *report*.html
-  rm -fr ${SRC_PATH}/../results
-
   # do devstudio installs so we can compare them
   . ${SRC_PATH}/install.devstudio.sh -INSTALLERS_LISTFILE ${INSTALLERS_LISTFILE} -INSTALLER_NIGHTLY_FOLDER ${INSTALLER_NIGHTLY_FOLDER} \
     -INSTALL_FOLDER ${INSTALL_FOLDER} -JAVA ${JAVA_HOME}/bin/java ${others}
