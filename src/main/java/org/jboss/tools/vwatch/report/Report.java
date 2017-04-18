@@ -6,11 +6,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jboss.tools.vwatch.Settings;
 import org.jboss.tools.vwatch.model.Installation;
 import org.jboss.tools.vwatch.service.LogService;
-import org.jboss.tools.vwatch.service.ReportService;
-import org.jboss.vwatch.util.CSSReader;
 import org.jboss.vwatch.util.HtmlWriter;
 
 /**

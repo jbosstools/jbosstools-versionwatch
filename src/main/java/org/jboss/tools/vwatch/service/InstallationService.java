@@ -2,7 +2,6 @@ package org.jboss.tools.vwatch.service;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,10 +74,11 @@ public class InstallationService {
 
 	/**
 	 * Parses bundle record and adds Bundle into Bundle Collection
+	 * @param <T>
 	 * @param record
 	 * @param bundles
 	 */
-	private Bundle parseAndGetBundle(Installation installation, boolean feature, String record) {
+	private <T> Bundle parseAndGetBundle(Installation installation, boolean feature, String record) {
 		//Bundle b = new Bundle();
 		
 		// parse version from record
@@ -188,6 +188,7 @@ public class InstallationService {
 		
 		bi.setBundleType(bi.getBundleType() | bundleType);
 		b.getInstances().add(bi);
+//		Collections.sort(b.getInstances());
 		return b;							
 	}
 }

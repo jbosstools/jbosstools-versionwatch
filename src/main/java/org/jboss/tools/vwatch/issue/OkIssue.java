@@ -3,13 +3,14 @@ package org.jboss.tools.vwatch.issue;
 import org.jboss.tools.vwatch.model.Bundle;
 import org.jboss.tools.vwatch.model.Issue;
 import org.jboss.tools.vwatch.model.Severity;
-import org.jboss.tools.vwatch.validator.MD5Validator;
 import org.jboss.tools.vwatch.validator.OkValidator;
 
 public class OkIssue extends Issue {
 	
 
-	private OkIssue() {} 
+	public OkIssue() {
+		
+	} 
 	
 	public OkIssue(Bundle referenceBundle) {
 		this.sticky = false;

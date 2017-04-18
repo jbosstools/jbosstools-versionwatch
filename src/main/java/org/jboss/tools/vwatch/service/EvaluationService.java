@@ -5,11 +5,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jboss.tools.vwatch.Settings;
-import org.jboss.tools.vwatch.issue.OkIssue;
 import org.jboss.tools.vwatch.model.Bundle;
 import org.jboss.tools.vwatch.model.Installation;
 import org.jboss.tools.vwatch.model.Issue;
-import org.jboss.tools.vwatch.validator.*;
+import org.jboss.tools.vwatch.validator.BundleValidator;
+import org.jboss.tools.vwatch.validator.FolderAndJarValidator;
+import org.jboss.tools.vwatch.validator.MD5Validator;
+import org.jboss.tools.vwatch.validator.OkValidator;
+import org.jboss.tools.vwatch.validator.PairValidator;
+import org.jboss.tools.vwatch.validator.Validator;
+import org.jboss.tools.vwatch.validator.VersionBumped;
+import org.jboss.tools.vwatch.validator.VersionDecreasedValidator;
 
 /**
  * Evaluation Service
@@ -35,7 +41,6 @@ public class EvaluationService {
 		List<Installation> sortedList = new ArrayList<Installation>();
 
 		Installation min = originalList.get(0);
-		VersionService vs = new VersionService();
 		log.setLevel(Settings.getLogLevel());
 		log.info("Original list: " + originalList.toString());
 		int steps = originalList.size();

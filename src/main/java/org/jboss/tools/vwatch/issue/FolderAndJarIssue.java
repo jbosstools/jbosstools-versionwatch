@@ -14,7 +14,9 @@ import org.jboss.tools.vwatch.validator.FolderAndJarValidator;
  */
 public class FolderAndJarIssue extends Issue {
 	
-	private FolderAndJarIssue() {}
+	public FolderAndJarIssue() {
+		
+	}
 	
 	public FolderAndJarIssue(Bundle referenceBundle) {
 		this.sticky = false;

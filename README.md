@@ -39,13 +39,13 @@ For example:
 
 First, perform 2 or more devstudio installs using `install.devstudio.sh` (or install by hand).
 
-You can also do a headless install using a script like this to invoke a console install into ${HOME}/jbdevstudio:
+You can also do a headless install using a script like this to invoke a console install into ${HOME}/devstudio:
 
-    # move any existing install in ${HOME}/jbdevstudio first
-    if [[ -d ${HOME}/jbdevstudio ]]; then mv ${HOME}/jbdevstudio{,.PREVIOUS}; echo "Old devstudio install in ${HOME}/jbdevstudio moved to ${HOME}/jbdevstudio.PREVIOUS"; fi
+    # move any existing install in ${HOME}/devstudio first
+    if [[ -d ${HOME}/devstudio ]]; then mv ${HOME}/devstudio{,.PREVIOUS}; echo "Old devstudio install in ${HOME}/devstudio moved to ${HOME}/devstudio.PREVIOUS"; fi
 
-    # pipe "1" to the console install to accept the license terms and install into ${HOME}/jbdevstudio
-    echo 1 | java -jar jboss-devstudio-*installer*.jar -console; echo "Installed to ${HOME}/jbdevstudio"
+    # pipe "1" to the console install to accept the license terms and install into ${HOME}/devstudio
+    echo 1 | java -jar devstudio-*installer*.jar -console; echo "Installed to ${HOME}/devstudio"
 
 NOTE: If you did a headless or by-hand install, move those installs into whatever folder you set with `-Dvwatch.installationsDir` below. 
 
@@ -56,8 +56,8 @@ NOTE: If you used `install.devstudio.sh` then the `-INSTALL_FOLDER` parameter sh
 Next, use versionwatch to compare those installs:
 
     # fetch sources and build it
-    git clone https://github.com/jbosstools/jbosstools-vwatch.git
-    cd vwatch; mvn clean package -DskipTests=true
+    git clone https://github.com/jbosstools/jbosstools-versionwatch.git
+    cd *versionwatch; mvn clean package -DskipTests=true; ls -la target/*.jar
 
     # run it and capture a log
     java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" target/vwatch-*-jar-with-dependencies.jar | tee log.txt

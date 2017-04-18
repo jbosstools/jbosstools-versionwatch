@@ -2,6 +2,10 @@ Version Watch: a tool for auditing changes to versions of eclipse features & bun
 
 CHANGELOG
 
+Version 0.4.200
+* Implement proper dupe version range checking
+* Update known dupe issues for Neon.3
+
 Version 0.4.100
 * JBIDE-23483 installer jar no longer has jboss- prefix
 * JBDS-3887 s/jbds/devstudio/g

@@ -1,7 +1,6 @@
 package org.jboss.tools.vwatch.report;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,6 +70,8 @@ public class ProductReport extends Report {
 		sb.append("<tr><td>" + (feature?"Feature":"Plugin") + "</td><td>Problem</td><td>Reference Version(s)</td></tr>\n");
 		for (Bundle b : bundles) {
 			List<Issue> issues = b.getIssues();
+//			Collections.sort(issues, Collections.reverseOrder());
+
 			for (Issue i : issues) {
 				if (i.getClass().equals(class1)) {
 					String message = "<tr><td><b style='color:red' nowrap>" + i.getReferenceBundle().getName() + "</b></td><td nowrap>" + i.getDescription() + "</td><td nowrap>" +

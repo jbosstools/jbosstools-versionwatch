@@ -39,12 +39,8 @@ public class VersionService {
 			Matcher regexMatcher = regex.matcher(text);
 			if (regexMatcher.find()) {
 				String group = regexMatcher.group();
-	
-				String[] split = group.split("\\.");
 				try {
-					version.setMajor(Integer.parseInt(split[0]));
-					version.setMinor(Integer.parseInt(split[1]));
-					version.setBuild(Integer.parseInt(split[2]));
+					version = new Version(group);
 				} catch (NumberFormatException e) {
 					log.error("Cannot convert versions to numbers - " + e.getMessage());
 					return isValid;

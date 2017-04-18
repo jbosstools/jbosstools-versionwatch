@@ -3,7 +3,6 @@ package org.jboss.tools.vwatch.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

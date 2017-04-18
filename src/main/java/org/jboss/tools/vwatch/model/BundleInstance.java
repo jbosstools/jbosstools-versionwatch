@@ -7,7 +7,7 @@ import java.util.List;
 import org.jboss.tools.vwatch.service.FileService;
 import org.jboss.tools.vwatch.service.MD5Service;
 
-public class BundleInstance {
+public class BundleInstance implements Comparable<BundleInstance> {
 	String absolutePath;
 	String fullName;
 	Bundle bundle;
@@ -86,7 +86,7 @@ public class BundleInstance {
 
 	public String getErrorsAndWarnings() {
 		String ret = "";
-		
+
 		for (Issue i : getIssues()) {
 			ret += i.getSeverity().toString() + ": " + i.getDescription() + "&#10;";
 		}
@@ -104,21 +104,19 @@ public class BundleInstance {
 	public String getMd5() {
 		if (md5.equals("")) {
 			if (bundleType.isJar()) {
-				File f = new File(getAbsolutePath()+ ".jar");
-				md5 = MD5Service.getInstance().getMD5(f);	
-			}
-			else if ((bundleType.isDir()))
-			{				
+				File f = new File(getAbsolutePath() + ".jar");
+				md5 = MD5Service.getInstance().getMD5(f);
+			} else if ((bundleType.isDir())) {
 				File f = null;
 
 				// this needs to be changed for per file
 
-				f = new File(getAbsolutePath()+ ".zip");
-				FileService.getInstance().zipFolder(new File(getAbsolutePath()), f);				
+				f = new File(getAbsolutePath() + ".zip");
+				FileService.getInstance().zipFolder(new File(getAbsolutePath()), f);
 				md5 = MD5Service.getInstance().getMD5(new File(getAbsolutePath() + ".zip"));
 				f.delete();
 			}
-		}		
+		}
 		return md5;
 	}
 
@@ -140,5 +138,10 @@ public class BundleInstance {
 
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	public int compareTo(BundleInstance compareBI) {
+		int compareQuantity = ((BundleInstance) compareBI).getVersion().toNumber();
+		return compareQuantity - this.version.toNumber();
 	}
 }

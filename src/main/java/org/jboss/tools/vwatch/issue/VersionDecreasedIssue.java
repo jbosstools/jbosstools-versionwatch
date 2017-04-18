@@ -14,7 +14,9 @@ import org.jboss.tools.vwatch.validator.VersionDecreasedValidator;
  */
 public class VersionDecreasedIssue extends Issue {
 	
-	private VersionDecreasedIssue() {}
+	public VersionDecreasedIssue() {
+		
+	}
 
 	// old method which doesn't report the full problem
 	public VersionDecreasedIssue(Bundle referenceBundle) {

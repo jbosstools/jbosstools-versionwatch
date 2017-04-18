@@ -1,18 +1,15 @@
 package org.jboss.tools.vwatch.issue;
 
+import java.util.List;
+
 import org.jboss.tools.vwatch.model.Bundle;
 import org.jboss.tools.vwatch.model.Issue;
 import org.jboss.tools.vwatch.model.Severity;
 import org.jboss.tools.vwatch.validator.MD5Validator;
 
-import java.util.List;
-
 public class MD5Issue extends Issue {
 	
-
-	private MD5Issue() {}
 	private List<String> details;
-
 
 	public MD5Issue(Bundle referenceBundle, List<String> details) {
 		this.details = details;
@@ -21,6 +18,10 @@ public class MD5Issue extends Issue {
 		this.severity = Severity.ERROR;
 		this.referenceBundle = referenceBundle;
 		this.validation = new MD5Validator();
+	}
+
+	public MD5Issue() {
+		
 	}
 
 	@Override

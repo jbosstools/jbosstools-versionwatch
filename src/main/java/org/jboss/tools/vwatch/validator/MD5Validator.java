@@ -11,6 +11,7 @@ import org.jboss.tools.vwatch.service.MD5Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.jar.JarEntry;
 
 import static org.jboss.tools.vwatch.model.BundleType.JAR;
 
@@ -62,7 +63,7 @@ public class MD5Validator extends PairValidator {
 	 */
 	private void unpackJarUnhandled(String destDir, File jarFile) throws IOException {
 		java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
-		java.util.Enumeration enumEntries = jar.entries();
+		Enumeration<JarEntry> enumEntries = jar.entries();
 		while (enumEntries.hasMoreElements()) {
 			java.util.jar.JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
 			java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
@@ -83,6 +84,7 @@ public class MD5Validator extends PairValidator {
 				is.close();
 			}
 		}
+		jar.close();
 	}
 
 	/**
