@@ -1,2 +1,2 @@
-https://devstudio.redhat.com/static/10.0/stable/builds/devstudio-10.3.0.GA-build-product/latest/all/devstudio-10.3.0.latest-installer-standalone.jar,
-https://devstudio.redhat.com/static/10.0/stable/builds/devstudio-10.2.0.GA-build-product/latest/all/devstudio-10.2.0.latest-installer-standalone.jar
+https://devstudio.redhat.com/static/10.0/stable/builds/devstudio-10.3.0.GA-build-product/latest/all/devstudio-10.3.0.GA-v20170218-1636-B94-installer-standalone.jar,
+https://devstudio.redhat.com/static/10.0/stable/builds/devstudio-10.2.0.GA-build-product/latest/all/devstudio-10.2.0.GA-v20161125-1418-B55-installer-standalone.jar
