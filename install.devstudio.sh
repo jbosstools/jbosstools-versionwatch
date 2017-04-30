@@ -28,13 +28,13 @@ INSTALL_FOLDER=/home/hudson/static_build_env/devstudio/versionwatch/installation
 # INSTALLERS_LISTFILE :: used to find install.devstudio.list.txt; use either present working directory or passed in commandline arg
 INSTALLERS_LISTFILE=`pwd`/install.devstudio.list.txt
 
-# BASE_URL :: if path to installer is not found locally, set a base URL instead from which to download them; default: http://www.qa.jboss.com/binaries/RHDS/
-BASE_URL=http://www.qa.jboss.com/binaries/RHDS
+# BASE_URL :: if path to installer is not found locally, set a base URL instead from which to download them; default: https://devstudio.redhat.com
+BASE_URL=https://devstudio.redhat.com
 
 usage() {
   echo "$0"
   echo "  [ -JAVA /qa/tools/opt/jdk1.8.0_last/bin/java ]"
-  echo "  [ -BASE_URL http://www.qa.jboss.com/binaries/RHDS ]" 
+  echo "  [ -BASE_URL https://devstudio.redhat.com ]"
   echo "  [ -INSTALL_FOLDER /home/hudson/static_build_env/devstudio/versionwatch/installations ]"
   echo "  [ -INSTALLER_NIGHTLY_FOLDER /10.0/snapshots/builds/devstudio.product_master/latest/all/ ]"
   echo "  [ -INSTALLERS_LISTFILE /path/to/install.devstudio.list.txt ]"
@@ -55,7 +55,7 @@ others=""
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     '-JAVA') JAVA="$2"; shift 1;; # /path/to/bin/java8
-    '-BASE_URL') BASE_URL="$2"; shift 1;; # if path to installer is not found locally, set a base URL instead from which to download; default: http://www.qa.jboss.com/binaries/RHDS
+    '-BASE_URL') BASE_URL="$2"; shift 1;; # if path to installer is not found locally, set a base URL instead from which to download; default: https://devstudio.redhat.com
     '-INSTALL_FOLDER') INSTALL_FOLDER="$2"; shift 1;; # path to parent folder under which to perform installations, eg., /home/hudson/static_build_env/devstudio/versionwatch/installations
     '-INSTALLER_NIGHTLY_FOLDER') INSTALLER_NIGHTLY_FOLDER="$2"; shift 1;; # Folder from which to install the latest nightly devstudio build
     '-INSTALLERS') INSTALLERS="$2"; shift 1;; 
@@ -132,12 +132,21 @@ installDevstudio() {
 <com.izforge.izpack.panels.SimpleFinishPanel id='finish'/>
 </AutomatedInstallation>" > ${INSTALL_FOLDER}/devstudio-${version}.install.xml
 
-  if [[ ! -f ${TMPDIR}/${localJar} ]] && [[ ${BASE_URL} ]]; then
+  if [[ -f ${remoteJar} ]]; then # ssh mounted access to remote file
+    echo "${remoteJar} on locally mounted drive, so run from there directly"
+    ${JAVA} ${others} -jar ${remoteJar} ${INSTALL_FOLDER}/devstudio-${version}.install.xml
+  elif [[ ! -f ${TMPDIR}/${localJar} ]] && [[ ${BASE_URL} ]]; then # get the remote jar
     # download the installer 
-    echo "${localJar} not found, so download it from ${remoteJar}"
-    pushd ${TMPDIR}/ >/dev/null; wget -nc ${remoteJar}; popd >/dev/null
+    echo "${localJar} not found, so get it from ${remoteJar}"
+    pushd ${TMPDIR}/ >/dev/null
+        if [[ ${remoteJar} == "http"* ]] || [[ ${remoteJar} == "ftp"* ]]; then
+            wget -nc ${remoteJar}
+        else
+            rsync -arzq --protocol=28 ${remoteJar} ${TMPDIR}/${localJar}
+        fi
+    popd >/dev/null
+    ${JAVA} ${others} -jar ${TMPDIR}/${localJar} ${INSTALL_FOLDER}/devstudio-${version}.install.xml
   fi
-  ${JAVA} ${others} -jar ${TMPDIR}/${localJar} ${INSTALL_FOLDER}/devstudio-${version}.install.xml
 }
 
 if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; then 
