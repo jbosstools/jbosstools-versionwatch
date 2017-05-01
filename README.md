@@ -7,13 +7,13 @@ VersionWatch (vwatch) is application for comparing bundles across several eclips
   * **ProductReport** (report_summary.html)
 
 ## Critera ##
-  
+
   * **FolderAndJarIssue** - there are unexpected both foder and jar file for some bundle
   * **MD5Issue** - same bundle doesn’t have the same MD5 between installation (deep file scan is performed if needed), disabled by default
   * **MultipleVersionIssue** - bundle is present in multiple versions (ignored cases can be defined in multiple-version-ignore.properties)
   * **OkIssue** - reports that previous issue was fixed
   * **VersionDecreasedIssue** - bundle version is lower than bundle version in previous installation
-  
+
 
 ## Prerequisites ##
 Version watch requires one folder containing several Eclipse installation, for example:
@@ -24,15 +24,15 @@ Version watch requires one folder containing several Eclipse installation, for e
     * eclipse-4.2.2-m2
 
 ## Execution ##
-  
+
 ### Executing as JUnit test via maven ###
-  
+
     mvn -fae clean test [-Dparameter[=value]...]
-        
+      
 For example:
 
     mvn clean test -Dvwatch.installationsDir="/tmp/vw"
-      
+    
 ### Executing as JAR application ###
 
 #### Install devstudio
@@ -57,19 +57,22 @@ Next, use versionwatch to compare those installs:
 
     # fetch sources and build it
     git clone https://github.com/jbosstools/jbosstools-versionwatch.git
-    cd *versionwatch; mvn clean package -DskipTests=true; ls -la target/*.jar
+    cd *versionwatch; mvn package -DskipTests=true; ls -la target
 
-    # run it and capture a log
+    # run it and capture a log for all IUs
     java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
+
+    # run it and capture a log for only some IUs
+    java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" "-Dvwatch.includeIUs=.*(jboss|hibernate).*" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
 
 
 ## Parameters ##
-**vwatch.loglevel** - specify log4j loglevel for vw logs  
-values: 7 -debug, 6- info, 4- warn, 3 - error, 0 - fatal  
+**vwatch.loglevel** - specify log4j loglevel for vw logs
+values: 7 -debug, 6- info, 4- warn, 3 - error, 0 - fatal
 default: all
 example: -Dvwatch.loglevel=6
 
-**vwatch.installationsDir** - directory where eclipse installations are located  
+**vwatch.installationsDir** - directory where eclipse installations are located
 default: /opt/vw
 example: -Dvwatch.installationsDir=/opt/my_ide_container_dir
 
@@ -77,25 +80,24 @@ example: -Dvwatch.installationsDir=/opt/my_ide_container_dir
 default: last product (product with the highest version)
 example:
 
-**vwatch.filter** - report will contain only items matching filter  
-defaut: all items will be visible  
-example: -Dvwatch.filter=org.jboss.tools.*
-
-**vwatch.md5check** - enableds MD5 check comparing related bundles accross installations  
-defaut: disabled  
+**vwatch.md5check** - enableds MD5 check comparing related bundles accross installations
+defaut: disabled
 example: -Dvwatch.md5check
 
-**vwatch.includeVersions** - allows to list only selected installations  
-defaut: \d+\.\d+\.\d+  
+**vwatch.includeVersions** - allows to list only selected installations, eg., (10|11)
+defaut: \d+\.\d+\.\d+
 
-**vwatch.excludeVersions** - allows to exclude selected installations  
-default: none  
+**vwatch.excludeVersions** - allows to exclude selected installations
+default: none
 
-**vwatch.includeIUs** - allows to include specific bundles  
+**vwatch.includeIUs** - allows to include specific bundles, eg., .*(jboss|hibernate).*
 default: ".*"
 
-**vwatch.excludeIUs** - allows to exclude specific bundles  
+**vwatch.excludeIUs** - allows to exclude specific bundles
 default: none;
 
-**vwatch.setLogLevel** - allows to set log level  
+**vwatch.filenameSuffix** - allows to rename report files, eg., .something.html
+default: .html;
+
+**vwatch.setLogLevel** - allows to set log level
 default: Level.WARN (4)

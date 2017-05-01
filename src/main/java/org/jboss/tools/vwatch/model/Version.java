@@ -52,6 +52,8 @@ public class Version {
 	public Version(String versionString) throws NumberFormatException
 	{
 		Logger log = Logger.getLogger(Version.class);
+		// NOTE: if versionString has more than one version in it, just take the first one
+		versionString = versionString.replaceAll("<br/>.+","");
 		try {
 			String[] data = versionString.split("\\.");
 			if (data.length >=1 && data[0] != null) setMajor(Integer.parseInt(data[0]));
@@ -59,7 +61,8 @@ public class Version {
 			if (data.length >=3 && data[2] != null) setBuild(Integer.parseInt(data[2]));
 			if (data.length >=4 && data[3] != null) setQualifier(data[3]);
 		} catch (NumberFormatException e) {
-			log.error("Cannot convert version to numbers - " + e.getMessage());
+			log.error("Cannot convert version [ " + versionString + " ] to numbers.");
+			log.error(e.getMessage());
 		}
 	}
 

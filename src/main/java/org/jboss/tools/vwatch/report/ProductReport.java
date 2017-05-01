@@ -27,13 +27,14 @@ public class ProductReport extends Report {
 	}
 
 	@Override
-	protected String getFileName() {
-		return "report_summary.html";
+	protected String getFileName(String includeIUs, String filenameSuffix) {
+		return (includeIUs.equals(".*") ? "report_summary_all" : "report_summary_filtered") + filenameSuffix;
 	}
 
 	protected void generateHeader() {	
-		String style = ReportService.getInstance().getCSSContent();
-		add("<html><head><title>Version Watch - Summary Report</title><style type=\"text/css\">" + style + "</style></head>");
+		add("<html><head><title>Version Watch - Summary Report</title>"
+				+ "<link href=\"" + ReportService.getInstance().getHTMLArtifacts(3) + "\" rel=\"stylesheet\" type=\"text/css\"/>"
+				+ "</head>");
 		add("<body>");
 	}
 

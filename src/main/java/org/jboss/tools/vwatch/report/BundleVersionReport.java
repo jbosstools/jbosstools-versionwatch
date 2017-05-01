@@ -51,15 +51,16 @@ public class BundleVersionReport extends Report {
 	}
 
 	@Override
-	protected String getFileName() {
-		return "report_detailed.html";
+	protected String getFileName(String includeIUs, String filenameSuffix) {
+		return (includeIUs.equals(".*") ? "report_detailed_all" : "report_detailed_filtered") + filenameSuffix;
 	}
 
 	@Override
 	protected void generateHeader() {
-		String style = ReportService.getInstance().getCSSContent();
-		add("<html><head><title>Version Watch - Detailed Report</title><style type=\"text/css\">" + style
-				+ "</style></head>");
+		add("<html><head>"
+			+ "<title>Version Watch - Detailed Report</title>"
+			+ "<link href=\"" + ReportService.getInstance().getHTMLArtifacts(3) + "\" rel=\"stylesheet\" type=\"text/css\"/>"
+			+ "</head>");
 		add("<body>");
 	}
 
@@ -68,10 +69,10 @@ public class BundleVersionReport extends Report {
 
 		add("<h2>Version Watch - Detailed Report: " + installations.get(installations.size() - 1).getRootFolderName()
 				+ "</h2>");
-
-		File file = new File("target/" + getFileName());
 		String includeIUs = Settings.getIncludeIUs();
 		String excludeIUs = Settings.getExcludeIUs();
+		String filenameSuffix = Settings.getFilenameSuffix();
+		File file = new File("target/" + getFileName(includeIUs, filenameSuffix));
 
 		log.setLevel(Settings.getLogLevel());
 
@@ -110,7 +111,7 @@ public class BundleVersionReport extends Report {
 			return;
 		}
 
-		log.warn("Report generated to file:///" + file.getAbsolutePath());
+		// log.warn("Report generated to file:///" + file.getAbsolutePath());
 		add("<h2>devstudio version watch - detailed report: " + installations.get(0).getRootFolderName() + "</h2>");
 	}
 
@@ -240,10 +241,10 @@ public class BundleVersionReport extends Report {
 	private String getIcons(Bundle b) {
 		String ret = "";
 		if (b.getBumped()) {
-			String relPath = ReportService.getInstance().getBumpIcoPath();
+			String relPath = ReportService.getInstance().getHTMLArtifacts(0);
 			ret = "<img src=\"" + relPath + "\"/>";
 		} else if (b.isDecreased()) {
-			String relPath = ReportService.getInstance().getDecIcoPath();
+			String relPath = ReportService.getInstance().getHTMLArtifacts(2);
 			ret = "<img src=\"" + relPath + "\"/>";
 		} else {
 			boolean check = true;
@@ -253,7 +254,7 @@ public class BundleVersionReport extends Report {
 				}
 			}
 			if (check) {
-				String relPath = ReportService.getInstance().getSameIcoPath();
+				String relPath = ReportService.getInstance().getHTMLArtifacts(1);
 				ret = "<img src=\"" + relPath + "\"/>";
 			}
 		}

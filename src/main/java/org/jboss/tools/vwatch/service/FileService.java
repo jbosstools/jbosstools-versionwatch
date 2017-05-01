@@ -46,7 +46,7 @@ public class FileService {
 		}
 	}
 
-	public String ExportResource(String resourceName) throws Exception {
+	public String exportResource(String resourceName) throws Exception {
 		InputStream stream = null;
 		OutputStream resStreamOut = null;
 		String jarFolder;

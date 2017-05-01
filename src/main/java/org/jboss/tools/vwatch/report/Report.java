@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jboss.tools.vwatch.Settings;
 import org.jboss.tools.vwatch.model.Installation;
 import org.jboss.tools.vwatch.service.LogService;
 import org.jboss.vwatch.util.HtmlWriter;
@@ -37,7 +38,9 @@ public abstract class Report {
 	}
 
 	private void createReportFile() {
-		File file = new File("target/" + getFileName());
+		String includeIUs = Settings.getIncludeIUs(); // log.debug("Got includeIUs = " + includeIUs);
+		String filenameSuffix = Settings.getFilenameSuffix(); // log.debug("Got filenameSuffix = " + filenameSuffix);
+		File file = new File("target/" + getFileName(includeIUs, filenameSuffix));
 
 		try {
 			PrintWriter pw = new PrintWriter(file);
@@ -48,15 +51,14 @@ public abstract class Report {
 		} catch (Exception e) {
 			LogService.logAndExit("Unable to generate report file");
 		}
-		log.warn("Report generated to file:///" + file.getAbsolutePath());
-
+		log.info("Report: file:///" + file.getAbsolutePath());
 	}
 
 	protected abstract void generateHeader();
 
 	protected abstract void generateBody();
 
-	protected abstract String getFileName();
+	protected abstract String getFileName(String includeIUs, String suffix);
 
 	public String getContent() {
 		return sb.toString();

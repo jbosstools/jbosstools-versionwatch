@@ -21,22 +21,22 @@ public class FolderLookupService  {
 	
 	/**
 	 * Load installations based in the repo path
-	 * @param repoPath
+	 * @param installationsDir
 	 * @return
 	 */
 	
 	Logger log = Logger.getLogger(FolderLookupService.class);
 	LogService ls = new LogService();
 	
-	public List<Installation> getInstallations(String repoPath) {
+	public List<Installation> getInstallations(String installationsDir) {
 				
 		List<Installation> installations = new ArrayList<Installation>();
 		// check repo dir
-		if (!dirExists(repoPath)) ls.logAndExit(repoPath + " doesn't exist or is not directory");   
+		if (!dirExists(installationsDir)) ls.logAndExit(installationsDir + " doesn't exist or is not directory");   
 					
 		// load folders list
-		installations = getValidInstallFolders(repoPath);	
-		if (installations.size() == 0) ls.logAndExit(repoPath + " no installation folders found");
+		installations = getValidInstallFolders(installationsDir);	
+		if (installations.size() == 0) ls.logAndExit(installationsDir + " no installation folders found");
 		
 		// load installations content
 		fillInstallationsContent(installations);
@@ -47,21 +47,21 @@ public class FolderLookupService  {
 
 	/**
 	 * Check if directory exists
-	 * @param repoPath
+	 * @param installationsDir
 	 * @return
 	 */
-	private boolean dirExists(String repoPath) {
-		File f = new File(repoPath);
+	private boolean dirExists(String installationsDir) {
+		File f = new File(installationsDir);
 		return (f.exists() && f.isDirectory());
 	}
 
 
 	/**
 	 * Returns folder list matching valid pattern
-	 * @param repoPath
+	 * @param installationsDir
 	 * @return
 	 */
-	private List<Installation> getValidInstallFolders(String repoPath) {
+	private List<Installation> getValidInstallFolders(String installationsDir) {
 
 		List<Installation> installations = new ArrayList<Installation>();
 		
@@ -70,7 +70,7 @@ public class FolderLookupService  {
 		log.info("Include versions: " + Settings.getIncludeVersions());
 		log.info("Exclude versions: " + Settings.getExcludeVersions());
 
-		File root = new File(repoPath);
+		File root = new File(installationsDir);
 			File[] listFiles = root.listFiles();
 			// sort 9 < 10, not 9 > 1 
 			Arrays.sort(listFiles, new InstallationComparator());

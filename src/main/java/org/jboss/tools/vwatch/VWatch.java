@@ -23,8 +23,7 @@ import org.jboss.tools.vwatch.service.StopWatch;
 public class VWatch {
 
 	public static final String VERSION = "0.4.200";
-	private String repoPath = "/opt/vw";
-	private int loglevel = 4; // 7 = DEBUG, 6 = INFO, 4 = WARN (default), 3 = ERROR
+	private int loglevelDefault = 4; // 7=DEBUG, 6=INFO, 4=WARN (default), 3=ERROR
 	private boolean md5checkEnabled = false;
 	Logger log = Logger.getLogger(VWatch.class);
 	List<Installation> installations = new ArrayList<Installation>();
@@ -55,17 +54,18 @@ public class VWatch {
 	/**
 	 * Read configuration from outside: Supported parameters: -
 	 * vwatch.installationsDir : root with eclipse installations -
-	 * vwatch.includeIUs / excludeIUs : restrict list of bundles to only those matching include/exclude filters
+	 * vwatch.includeIUs / excludeIUs : restrict list of bundles to only those
+	 * matching include/exclude filters ; see also README.md for more
 	 */
 	private void configureVWatch() {
-		String logLevelStr = System.getProperty("vwatch.loglevel");
-		if (logLevelStr != null) { 
+		String logLevelStr = System.getProperty(Settings.loglevelProperty);
+		int loglevel;
+		if (logLevelStr != null) {
 			loglevel = Integer.parseInt(logLevelStr);
+		} else {
+			loglevel = loglevelDefault;
 		}
-		else {
-			loglevel = 7;
-		}
-		
+
 		switch (loglevel) {
 		case 7:
 			Settings.setLogLevel(Level.DEBUG);
@@ -88,13 +88,13 @@ public class VWatch {
 		}
 		log.setLevel(Settings.getLogLevel());
 
-		String installationsDir = System.getProperty("vwatch.installationsDir");
+		String installationsDir = System.getProperty(Settings.installationsDirProperty);
 		if (installationsDir != null) {
-			repoPath = installationsDir;
-			log.info("Installations dir set to: " + repoPath);
+			Settings.setInstallationsDir(installationsDir);
+			log.info("Installations dir set to: " + installationsDir);
 		}
 
-		String md5check= System.getProperty(Settings.md5checkVMProperty);
+		String md5check = System.getProperty(Settings.md5checkVMProperty);
 		if (md5check != null) {
 			Settings.setMd5checkEnabled(true);
 		}
@@ -102,7 +102,7 @@ public class VWatch {
 		if (product != null) {
 			Settings.setProduct(product);
 		}
-		
+
 		String includeVersions = System.getProperty(Settings.includeVersionsProperty);
 		if (includeVersions != null) {
 			Settings.setIncludeVersions(includeVersions);
@@ -121,6 +121,11 @@ public class VWatch {
 			Settings.setExcludeIUs(excludeIUs);
 		}
 
+		String filenameSuffix = System.getProperty(Settings.filenameSuffixProperty);
+		if (filenameSuffix != null) {
+			Settings.setFilenameSuffix(filenameSuffix);
+		}
+
 	}
 
 	/**
@@ -128,8 +133,7 @@ public class VWatch {
 	 */
 	private void configureLog4j() {
 		Logger root = Logger.getRootLogger();
-		root.addAppender(new ConsoleAppender(new PatternLayout(
-				PatternLayout.TTCC_CONVERSION_PATTERN)));
+		root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 	}
 
 	/**
@@ -138,7 +142,7 @@ public class VWatch {
 	private void loadInstallations() {
 		log.info("Loading installation started");
 		FolderLookupService fls = new FolderLookupService();
-		installations = fls.getInstallations(repoPath);
+		installations = fls.getInstallations(Settings.getInstallationsDir());
 		log.info("Installations loaded");
 
 	}
@@ -148,8 +152,9 @@ public class VWatch {
 	 */
 	private void evaluateInstallations() {
 		EvaluationService es = new EvaluationService();
-		// this is no longer needed because we can just sort the installations with Arrays.sort, which is much faster
-		//installations = es.sortInstallations(installations);
+		// this is no longer needed because we can just sort the installations
+		// with Arrays.sort, which is much faster
+		// installations = es.sortInstallations(installations);
 		es.prepareValidators();
 		es.findConflicts(installations);
 	}
