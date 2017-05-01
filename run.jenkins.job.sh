@@ -157,13 +157,12 @@ publish ()
   name=${label,,} # lowercase
   # rename in workspace
   mkdir -p ${SRC_PATH}/../results/target/
-  mv ${SRC_PATH}/target/report_detailed.html ${SRC_PATH}/target/report_detailed_${name}.html
-  mv ${SRC_PATH}/target/report_summary.html ${SRC_PATH}/target/report_summary_${name}.html
 
   # publish now depends on having publish/rsync.sh fetched to workspace already -- see 
   # https://repository.jboss.org/nexus/content/groups/public/org/jboss/tools/releng/jbosstools-releng-publish/
   . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/target/ -t ${TRG_PATH}/ -DESTINATION ${DESTINATION} -i "*report_*.html"
   . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/target/ -t ${TRG_PATH}/ -DESTINATION ${DESTINATION} -i "*.png"
+  . ${WORKSPACE}/sources/publish/rsync.sh -s ${SRC_PATH}/target/ -t ${TRG_PATH}/ -DESTINATION ${DESTINATION} -i "*.css"
 
   # create links to html files (must be all on one line)
   DESCRIPTION="${DESCRIPTION}"'<li>'${label}' <a href="'${URL}'/report_detailed_'${name}'.html">Details</a>,\
