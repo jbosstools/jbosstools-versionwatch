@@ -99,7 +99,7 @@ elif [[ ${DESTINATION} == "devstudio@"* ]]; then # devstudio public
 elif [[ ${DESTINATION} == *"binaries/devstudio" ]] || [[ ${DESTINATION} == *"binaries/RHDS" ]]; then # devstudio internal
   URL=http://www.qa.jboss.com/binaries/devstudio/${STREAM_NAME}/snapshots/builds/${JOB_NAME}/${BUILD_TIMESTAMP}-B${BUILD_NUMBER}
 else # local file in workspace
-  URL="ws/results";
+  URL="ws/sources/target";
 fi
 
 # if not set commandline, use default upstream job based on this job's name -> devstudio.product_master, devstudio.product_8.0.luna, etc.
@@ -141,11 +141,11 @@ check_results ()
   label=$1 # Title Case
   name=${label,,} # lowercase
   calltoaction=":: See ${label} Reports: ${URL}/report_detailed_${name}.html and ${URL}/report_summary_${name}.html"
-  if [[ ! `egrep -l "<td>|<tr>" ${SRC_PATH}/../results/report_detailed_${name}.html` ]]; then
+  if [[ ! `egrep -l "<td>|<tr>" ${SRC_PATH}/target/report_detailed_${name}.html` ]]; then
     echo "FAILURE IN OUTPUT: Empty results in report_detailed_${name}.html"
     echo $calltoaction
   fi
-  if [[ `egrep -l "ERROR:" ${SRC_PATH}/../results/report_detailed_${name}.html` ]]; then
+  if [[ `egrep -l "ERROR:" ${SRC_PATH}/target/report_detailed_${name}.html` ]]; then
     echo "FAILURE IN OUTPUT: Errors found in report_detailed_${name}.html"
     echo $calltoaction
   fi
@@ -156,7 +156,7 @@ publish ()
   label=$1 # Title Case
   name=${label,,} # lowercase
   # rename in workspace
-  mkdir -p ${SRC_PATH}/../results/target/
+  mkdir -p ${SRC_PATH}/target/
 
   # publish now depends on having publish/rsync.sh fetched to workspace already -- see 
   # https://repository.jboss.org/nexus/content/groups/public/org/jboss/tools/releng/jbosstools-releng-publish/
