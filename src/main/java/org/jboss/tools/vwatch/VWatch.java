@@ -57,10 +57,10 @@ public class VWatch {
 	 * vwatch.includeIUs / excludeIUs : restrict list of bundles to only those
 	 * matching include/exclude filters ; see also README.md for more
 	 */
-	private void configureVWatch() {
+	void configureVWatch() {
 		String logLevelStr = System.getProperty(Settings.loglevelProperty);
 		int loglevel;
-		if (logLevelStr != null) {
+		if (logLevelStr != null && !logLevelStr.equals("")) {
 			loglevel = Integer.parseInt(logLevelStr);
 		} else {
 			loglevel = loglevelDefault;
@@ -89,9 +89,12 @@ public class VWatch {
 		log.setLevel(Settings.getLogLevel());
 
 		String installationsDir = System.getProperty(Settings.installationsDirProperty);
-		if (installationsDir != null) {
+		if (installationsDir != null && !installationsDir.equals("")) {
 			Settings.setInstallationsDir(installationsDir);
 			log.info("Installations dir set to: " + installationsDir);
+		} else {
+			log.warn("installationsDir is not set!");
+			log.warn("Must define on commandline with -DinstallationsDir=/path/to/installations/");
 		}
 
 		String md5check = System.getProperty(Settings.md5checkVMProperty);
@@ -131,7 +134,7 @@ public class VWatch {
 	/**
 	 * Basic programmatic log4j configuration
 	 */
-	private void configureLog4j() {
+	void configureLog4j() {
 		Logger root = Logger.getRootLogger();
 		root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 	}
@@ -139,7 +142,7 @@ public class VWatch {
 	/**
 	 * Load installations into collections
 	 */
-	private void loadInstallations() {
+	void loadInstallations() {
 		log.info("Loading installation started");
 		FolderLookupService fls = new FolderLookupService();
 		installations = fls.getInstallations(Settings.getInstallationsDir());
@@ -150,7 +153,7 @@ public class VWatch {
 	/**
 	 * Sorts and evaluates installations and finds defined bundle conflicts
 	 */
-	private void evaluateInstallations() {
+	void evaluateInstallations() {
 		EvaluationService es = new EvaluationService();
 		// this is no longer needed because we can just sort the installations
 		// with Arrays.sort, which is much faster
@@ -162,7 +165,7 @@ public class VWatch {
 	/**
 	 * Create final report
 	 */
-	private void createReport() {
+	void createReport() {
 		ReportService rs = ReportService.getInstance();
 		rs.generateReport(installations);
 	}

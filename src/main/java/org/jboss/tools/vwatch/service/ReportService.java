@@ -63,7 +63,7 @@ public class ReportService {
 				return i;
 			}
 		}
-		return installations.get(installations.size() - 1);
+		return installations.size() > 0 ? installations.get(installations.size() - 1) : null;
 	}
 
 	public String getHTMLArtifacts(int num) {

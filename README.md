@@ -59,6 +59,9 @@ Next, use versionwatch to compare those installs:
     git clone https://github.com/jbosstools/jbosstools-versionwatch.git
     cd *versionwatch; mvn package -DskipTests=true; ls -la target
 
+    # if you have installed some devstudio installations in /tmp/vw, you can run the tests. Otherwise they will fail.
+    mvn package -DskipTests=false "-Dvwatch.installationsDir=/tmp/vw" 
+
     # run it and capture a log for all IUs
     java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
 
