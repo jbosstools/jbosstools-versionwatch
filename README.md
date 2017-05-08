@@ -62,11 +62,13 @@ Next, use versionwatch to compare those installs:
     # if you have installed some devstudio installations in /tmp/vw, you can run the tests. Otherwise they will fail.
     mvn package -DskipTests=false "-Dvwatch.installationsDir=/tmp/vw" 
 
-    # run it and capture a log for all IUs
-    java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
+    # or a as maven job, run first in "all" mode then in "filtered" mode to generate 4 report*.html files:
+    mvn test -q "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" "-Dvwatch.includeIUs=.*" | tee log.txt
+    mvn test -q "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" "-Dvwatch.includeIUs=.*(jboss|hibernate).*" | tee -a log.txt
 
-    # run it and capture a log for only some IUs
-    java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" "-Dvwatch.includeIUs=.*(jboss|hibernate).*" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
+    # or similarly, you can run as a java process:
+    java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" target/vwatch-*-jar-with-dependencies.jar | tee log.txt
+    java -jar "-Dvwatch.installationsDir=/tmp/vw" "-Dvwatch.md5check" "-Dvwatch.includeIUs=.*(jboss|hibernate).*" target/vwatch-*-jar-with-dependencies.jar | tee -a log.txt
 
 
 ## Parameters ##

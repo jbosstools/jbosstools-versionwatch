@@ -180,10 +180,11 @@ popd
 
 # generate reports and publish them
 pushd ${WORKSPACE}
-  ${MVN} -f ${SRC_PATH}/pom.xml clean test -fn -Dmaven.repo.local=${WORKSPACE}/.repository -DexcludeVersions="${EXCLUDE_VERSIONS}" \
+  ${MVN} -f ${SRC_PATH}/pom.xml clean
+  ${MVN} -f ${SRC_PATH}/pom.xml test -q -fn -Dmaven.repo.local=${WORKSPACE}/.repository -DexcludeVersions="${EXCLUDE_VERSIONS}" \
   -DincludeVersions="${INCLUDE_VERSIONS}" -DexcludeIUs="${EXCLUDE_IUS}" -DincludeIUs="${INCLUDE_IUS}" \
   -DinstallationsDir="${INSTALL_FOLDER}" && publish Filtered && check_results Filtered
-  ${MVN} -f ${SRC_PATH}/pom.xml clean test -fn -Dmaven.repo.local=${WORKSPACE}/.repository -DexcludeVersions="${EXCLUDE_VERSIONS}" \
+  ${MVN} -f ${SRC_PATH}/pom.xml test -q -fn -Dmaven.repo.local=${WORKSPACE}/.repository -DexcludeVersions="${EXCLUDE_VERSIONS}" \
   -DincludeVersions="${INCLUDE_VERSIONS}" -DexcludeIUs="${EXCLUDE_IUS}" -DincludeIUs=".*" \
   -DinstallationsDir="${INSTALL_FOLDER}" && publish All && check_results All
 popd
