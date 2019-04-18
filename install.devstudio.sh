@@ -159,8 +159,8 @@ if [[ ${INSTALLER_NIGHTLY_FOLDER} ]] && [[ -d ${INSTALLER_NIGHTLY_FOLDER} ]]; th
   # install the latest nightly, caching the last version used in devstudio-10.2.0.AM3/version.txt so we only ever have one nightly at a time
   # new query method for devstudio 8/9/10, eg., for devstudio-10.2.0.AM3-v20161109-2358-B6414-installer-standalone.jar
   for i in `find ${INSTALLER_NIGHTLY_FOLDER} -name "*codereadystudio-*-installer-standalone.jar" -a -not -name "*latest*"`; do
-    ver=${i##*codereadystudio-}; ver=${ver%%-installer-standalone.jar*}; ver=${ver##*codereadystudio-} # 10.2.0.AM3-v20161109-2358-B6414
-    f=${i##*codereadystudio-}; f=${f%%-*}; f=${f##*codereadystudio-} # 10.2.0.AM3
+    ver=${i##*devstudio-}; ver=${ver##*codereadystudio-}; ver=${ver%%-installer-standalone.jar*}; ver=${ver##*devstudio-}; ver=${ver##*codereadystudio-} # 10.2.0.AM3-v20161109-2358-B6414
+    f=${i##*devstudio-}; f=${f##*codereadystudio-}; f=${f%%-*}; f=${f##*devstudio-}; f=${f##*codereadystudio-} # 10.2.0.AM3
     LATEST=${INSTALL_FOLDER}/devstudio-${f}/version.txt
     if [[ -d ${INSTALL_FOLDER}/devstudio-${f} ]] && [[ -f ${LATEST} ]] && [[ `cat ${LATEST}` == $ver ]]; then 
       echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${f} (${ver})"
@@ -184,7 +184,7 @@ for i in ${INSTALLER_LIST}; do
   # if target folder does not exist, run the installer
   # 8.0.0.GA-v20141020-1042-B317
   # support old file formats (4, 5/6/7, and 8/9
-  ver=${i##*devstudio-}; ver=${ver%%-installer-standalone.jar*}; ver=${ver##*devstudio-} # 10.2.0.AM3-v20161109-2358-B6414
+  ver=${i##*devstudio-}; ver=${ver##*codereadystudio-}; ver=${ver%%-installer-standalone.jar*}; ver=${ver##*devstudio-}; ver=${ver##*codereadystudio-} # 10.2.0.AM3-v20161109-2358-B6414
   if [[ -d ${INSTALL_FOLDER}/devstudio-${ver} ]]; then 
     echo "Existing devstudio install in ${INSTALL_FOLDER}/devstudio-${ver}"
   else
