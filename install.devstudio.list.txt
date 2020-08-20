@@ -1,1 +1,1 @@
-https://devstudio.redhat.com/static/10.0/stable/builds/devstudio-10.4.0.GA-build-product/latest/all/devstudio-10.4.0.GA-v20170511-1748-B62-installer-standalone.jar
+https://devstudio.redhat.com/static/12/stable/builds/devstudio-12.16.0.GA-build-product/latest/all/codereadystudio-12.16.0.GA-installer-standalone.jar
