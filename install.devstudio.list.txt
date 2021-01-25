@@ -1,1 +1,1 @@
-https://devstudio.redhat.com/static/12/stable/builds/devstudio-12.17.0.GA-build-product/latest/all/codereadystudio-12.17.0.GA-installer-standalone.jar
+https://devstudio.redhat.com/static/12/stable/builds/devstudio-12.18.0.GA-build-product/latest/all/codereadystudio-12.18.0.GA-installer-standalone.jar
